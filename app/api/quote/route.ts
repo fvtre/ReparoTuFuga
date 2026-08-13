@@ -61,60 +61,67 @@ export async function POST(request: Request) {
     const urgencyName =
       urgencyLabels[urgency] ?? urgency
 
+      
     // =====================================
     // 1. CORREO INTERNO AL DUEÑO
     // =====================================
 
+    // Limpiar teléfono para enlace de WhatsApp.
+    // Ej: +56 9 1234 5678 → 56912345678
+    let whatsappPhone = String(phone)
+      .replace(/\D/g, '')
+
+    if (
+      whatsappPhone.length === 9 &&
+      whatsappPhone.startsWith('9')
+    ) {
+      whatsappPhone = `56${whatsappPhone}`
+    }
+
+    const whatsappUrl =
+      `https://wa.me/${whatsappPhone}`
+
+    const mailtoUrl =
+      `mailto:${email}`
+
+    // Fecha legible en Chile
+    const receivedAt =
+      new Intl.DateTimeFormat('es-CL', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+        timeZone: 'America/Santiago',
+      }).format(new Date())
+
     const ownerEmail =
       await resend.emails.send({
-        from: 'Reparo Tu Fuga <contacto@reparotufuga.cl>',
-        to: ['reparotufuga@gmail.com'],
+        from:
+          'Reparo Tu Fuga <contacto@reparotufuga.cl>',
+
+        to: [
+          'reparotufuga@gmail.com',
+        ],
+
+        // Si el dueño pulsa Responder en Gmail,
+        // responderá directamente al cliente.
         replyTo: email,
-        subject: `Nueva cotización ${orderNumber} - ${name}`,
-        html: `
-          <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:auto;">
-            <h1 style="color:#103650;">
-              Nueva solicitud de cotización
-            </h1>
 
-            <p>
-              <strong>Número:</strong>
-              ${orderNumber}
-            </p>
+        template: {
+          id: 'owner-service-request',
 
-            <hr>
-
-            <h2 style="color:#103650;">
-              Datos del cliente
-            </h2>
-
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Teléfono:</strong> ${phone}</p>
-            <p><strong>Dirección:</strong> ${address}</p>
-
-            <hr>
-
-            <h2 style="color:#103650;">
-              Detalles del servicio
-            </h2>
-
-            <p>
-              <strong>Servicio:</strong>
-              ${serviceName}
-            </p>
-
-            <p>
-              <strong>Urgencia:</strong>
-              ${urgencyName}
-            </p>
-
-            <p>
-              <strong>Descripción:</strong>
-              ${description}
-            </p>
-          </div>
-        `,
+          variables: {
+            orden: orderNumber,
+            nombre: name,
+            email,
+            telefono: phone,
+            direccion: address,
+            servicio: serviceName,
+            urgencia: urgencyName,
+            mensaje: description,
+            fecha: receivedAt,
+            whatsapp_url: whatsappUrl,
+            mailto_url: mailtoUrl,
+          },
+        },
       })
 
     if (ownerEmail.error) {
