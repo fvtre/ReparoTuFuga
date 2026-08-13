@@ -293,7 +293,7 @@ export function QuoteForm() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <a
-                  href="tel:+56982422038"
+                  href="tel:+56921765909"
                   className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors group"
                 >
                   <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
@@ -301,7 +301,7 @@ export function QuoteForm() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-card-foreground">Teléfono</h4>
-                    <p className="text-muted-foreground">+56 9 8242 2038</p>
+                    <p className="text-muted-foreground">+56 9 2176 5909</p>
                     <p className="text-sm text-primary mt-1">Disponible 24/7</p>
                   </div>
                 </a>
@@ -315,7 +315,7 @@ export function QuoteForm() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-card-foreground">Correo Electrónico</h4>
-                    <p className="text-muted-foreground">reparotufuga@gmail.com</p>
+                    <p className="text-muted-foreground">contacto@reparotufuga.cl</p>
                     <p className="text-sm text-primary mt-1">Respuesta en 1 hora</p>
                   </div>
                 </a>

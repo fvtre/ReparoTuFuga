@@ -93,11 +93,11 @@ export function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="tel:+56964767873"
+                  href="tel:+56921765909"
                   className="flex items-center gap-3 opacity-70 hover:opacity-100 hover:text-primary transition-all"
                 >
                   <Phone className="h-5 w-5 shrink-0" />
-                  <span>+56 9 6476 7873</span>
+                  <span>+56 9 2176 5909</span>
                 </a>
               </li>
               <li>
@@ -106,7 +106,7 @@ export function Footer() {
                   className="flex items-center gap-3 opacity-70 hover:opacity-100 hover:text-primary transition-all"
                 >
                   <Mail className="h-5 w-5 shrink-0" />
-                  <span>reparotufuga@gmail.com</span>
+                  <span>contacto@reparotufuga.cl</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 opacity-70">
