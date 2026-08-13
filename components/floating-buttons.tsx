@@ -9,8 +9,8 @@ export function FloatingButtons() {
   const [showTooltip, setShowTooltip] = useState(false)
 
   // Números de contacto
-  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || "56964767873"
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "56964767873"
+  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || "56921765909"
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "56921765909"
   const message = encodeURIComponent("Hola, me gustaría solicitar información sobre sus servicios de detección de fugas de agua.")
 
   useEffect(() => {
