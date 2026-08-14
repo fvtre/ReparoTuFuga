@@ -98,7 +98,7 @@ export function Header() {
                     className="flex items-center gap-2 text-primary font-semibold"
                   >
                     <Phone className="h-5 w-5" />
-                    <span>+56 9 2176 5909</span>
+                    <span>+56 9 7404 8721</span>
                   </a>
                   <Button asChild className="w-full">
                     <Link href="#cotizar" onClick={() => setIsOpen(false)}>

@@ -301,7 +301,7 @@ export function QuoteForm() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-card-foreground">Teléfono</h4>
-                    <p className="text-muted-foreground">+56 9 2176 5909</p>
+                    <p className="text-muted-foreground">+56 9 7404 8721</p>
                     <p className="text-sm text-primary mt-1">Disponible 24/7</p>
                   </div>
                 </a>

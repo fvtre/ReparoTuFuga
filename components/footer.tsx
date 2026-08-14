@@ -97,7 +97,7 @@ export function Footer() {
                   className="flex items-center gap-3 opacity-70 hover:opacity-100 hover:text-primary transition-all"
                 >
                   <Phone className="h-5 w-5 shrink-0" />
-                  <span>+56 9 2176 5909</span>
+                  <span>+56 9 7404 8721</span>
                 </a>
               </li>
               <li>
