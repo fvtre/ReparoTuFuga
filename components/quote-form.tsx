@@ -293,7 +293,7 @@ export function QuoteForm() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <a
-                  href="tel:+56921765909"
+                  href="tel:+56974048721"
                   className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors group"
                 >
                   <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">

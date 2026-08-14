@@ -85,7 +85,7 @@ export function Hero() {
               <Clock className="h-5 w-5" />
               <span className="text-base md:text-lg font-bold tracking-wide">EMERGENCIAS 24/7</span>
               <a
-                href="tel:+56921765909"
+                href="tel:+56974048721"
                 className="bg-white text-red-500 px-3 py-1 rounded-full text-sm font-bold hover:bg-red-50 transition-colors"
               >
                 LLAMAR AHORA
