@@ -90,6 +90,27 @@ export function QuoteForm() {
         throw new Error(data.error || "Error al enviar")
       }
 
+      // =====================================
+      // GOOGLE ADS - CONVERSIÓN REAL
+      // =====================================
+      // Solo se ejecuta si /api/quote respondió correctamente.
+      if (
+        typeof window !== "undefined" &&
+        typeof (window as any).gtag === "function"
+      ) {
+        ; (window as any).gtag("event", "conversion", {
+          send_to: "AW-18386414245/2ho_CN7P5-EcEKXVqb9E",
+          value: 1.0,
+          currency: "CLP",
+          transaction_id: data.orderNumber,
+        })
+
+        console.log(
+          "✅ Google Ads conversión registrada:",
+          data.orderNumber
+        )
+      }
+
       // ✅ éxito
       setSuccess(true)
       setIsSubmitted(true)
