@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
