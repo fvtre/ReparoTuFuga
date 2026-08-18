@@ -82,6 +82,7 @@ export default function RootLayout({
         <Toaster />
 
         <Analytics />
+        <SpeedInsights />
 
         {/* Google Ads / Google Tag */}
         <Script
