@@ -12,7 +12,9 @@ next.user-config.*
 .env
 # Common ignores
 node_modules
+.pnpm-store/
 .next/
 .next
+*.tsbuildinfo
 .DS_Store
 .vercel

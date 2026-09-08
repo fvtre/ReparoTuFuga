@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Phone, Droplets } from "lucide-react"
+import { track } from "@vercel/analytics"
 
 const navLinks = [
   { href: "#servicios", label: "Servicios" },
@@ -95,6 +96,7 @@ export function Header() {
                 <div className="flex flex-col gap-4 mt-4">
                   <a
                     href="tel:+56974048721"
+                    onClick={() => track("phone_click", { location: "mobile_header" })}
                     className="flex items-center gap-2 text-primary font-semibold"
                   >
                     <Phone className="h-5 w-5" />

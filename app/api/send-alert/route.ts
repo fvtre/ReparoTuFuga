@@ -3,6 +3,10 @@ import { Resend } from "resend"
 
 export async function POST(request: Request) {
   try {
+    const secret = process.env.ALERT_API_SECRET
+    if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    }
     const { to, subject, html } = await request.json()
 
     if (!to || !subject || !html) {
@@ -12,14 +16,13 @@ export async function POST(request: Request) {
       )
     }
 
-    //  Resend
-    const resend = new Resend('_dpxq2Tg6_6kjL8tZCX3RmUTDNnu3HVqvL')
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
     const data = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: 'reparotufuga@gmail.com',
-      subject: 'test',
-      html: '<h1>Hola mundo</h1>'
+      from: 'Reparo Tu Fuga <contacto@reparotufuga.cl>',
+      to,
+      subject,
+      html,
     })
 
     return NextResponse.json({
@@ -37,4 +40,3 @@ export async function POST(request: Request) {
     )
   }
 }
-

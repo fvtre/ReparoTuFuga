@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Phone, X } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
+import { track } from "@vercel/analytics"
 
 export function FloatingButtons() {
   const [isVisible, setIsVisible] = useState(false)
@@ -29,10 +30,12 @@ export function FloatingButtons() {
   }, [])
 
   const handleWhatsApp = () => {
+    track("whatsapp_click", { location: "floating_button" })
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank")
   }
 
   const handleCall = () => {
+    track("phone_click", { location: "floating_button" })
     window.location.href = `tel:+${phoneNumber}`
   }
 

@@ -123,10 +123,10 @@ export function Footer() {
             © {new Date().getFullYear()} ReparoTuFuga. Todos los derechos reservados.
           </p>
           <div className="flex gap-6 text-sm opacity-50">
-            <Link href="#" className="hover:opacity-100 transition-opacity">
+            <Link href="/terminos" className="hover:opacity-100 transition-opacity">
               Términos de Servicio
             </Link>
-            <Link href="#" className="hover:opacity-100 transition-opacity">
+            <Link href="/privacidad" className="hover:opacity-100 transition-opacity">
               Política de Privacidad
             </Link>
           </div>

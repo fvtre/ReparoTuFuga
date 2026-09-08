@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field"
 import { Send, CheckCircle2, Phone, Mail, MapPin } from "lucide-react"
 import { toast } from "sonner"
+import { track } from "@vercel/analytics"
 
 const serviceTypes = [
   { value: "residential", label: "Servicio Residencial" },
@@ -67,6 +68,18 @@ export function QuoteForm() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    let stored: Record<string, string> = {}
+    try { stored = JSON.parse(sessionStorage.getItem("rtf_attribution") || "{}") as Record<string, string> } catch { stored = {} }
+    sessionStorage.setItem("rtf_attribution", JSON.stringify({
+      source: params.get("utm_source") || stored.source || "", medium: params.get("utm_medium") || stored.medium || "",
+      campaign: params.get("utm_campaign") || stored.campaign || "", term: params.get("utm_term") || stored.term || "",
+      content: params.get("utm_content") || stored.content || "", gclid: params.get("gclid") || stored.gclid || "",
+      landingPage: stored.landingPage || window.location.href.slice(0, 1000), referrer: stored.referrer || document.referrer.slice(0, 1000),
+    }))
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -80,7 +93,7 @@ export function QuoteForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, attribution: JSON.parse(sessionStorage.getItem("rtf_attribution") || "{}") }),
       })
 
       const data = await response.json()
@@ -114,6 +127,7 @@ export function QuoteForm() {
       // ✅ éxito
       setSuccess(true)
       setIsSubmitted(true)
+      track("quote_submitted", { service_type: formData.serviceType, urgency: formData.urgency })
 
       // limpiar form
       setFormData({
@@ -126,9 +140,10 @@ export function QuoteForm() {
         description: "",
       })
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ ERROR:", err)
-      setError(err.message || "Error al enviar la cotización")
+      setError(err instanceof Error ? err.message : "Error al enviar la cotización")
+      track("quote_form_error", { reason: "submission_failed" })
     } finally {
       setIsSubmitting(false)
     }
@@ -315,6 +330,7 @@ export function QuoteForm() {
               <CardContent className="space-y-6">
                 <a
                   href="tel:+56974048721"
+                  onClick={() => track("phone_click", { location: "quote_section" })}
                   className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors group"
                 >
                   <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
