@@ -16,11 +16,19 @@ const cachedReport = unstable_cache(async (from: string, to: string): Promise<An
     if (!response.ok) throw new Error(`${resource}: ${response.status}`)
     return response.json() as Promise<any>
   }
+  const optionalCall = async (resource: string, extra?: Record<string, string>) => {
+    try {
+      return await call(resource, extra)
+    } catch (error) {
+      if (error instanceof Error && error.message === `${resource}: 402`) return []
+      throw error
+    }
+  }
   try {
     const [counts, daily, pages, referrers, countries, devices, events] = await Promise.all([
       call('visits/count'), call('visits/aggregate', { by: 'day' }), call('visits/aggregate', { by: 'requestPath' }),
       call('visits/aggregate', { by: 'referrerHostname' }), call('visits/aggregate', { by: 'country' }),
-      call('visits/aggregate', { by: 'deviceType' }), call('events/aggregate', { by: 'eventName' }),
+      call('visits/aggregate', { by: 'deviceType' }), optionalCall('events/aggregate', { by: 'eventName' }),
     ])
     const rows = (v: any) => Array.isArray(v) ? v : Array.isArray(v?.data) ? v.data : []
     return { configured: true, pageViews: typeof counts?.data?.pageviews === 'number' ? counts.data.pageviews : null, visitors: typeof counts?.data?.visitors === 'number' ? counts.data.visitors : null, daily: rows(daily), pages: rows(pages), referrers: rows(referrers), countries: rows(countries), devices: rows(devices), events: rows(events) }
