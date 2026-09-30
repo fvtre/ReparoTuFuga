@@ -8,7 +8,7 @@ const steps = [
     icon: Phone,
     step: "01",
     title: "Contáctanos",
-    description: "Llámanos o envía una cotización. Respondemos en menos de 1 hora.",
+    description: "Llámanos o envía una cotización. Respondemos en minutos.",
   },
   {
     icon: Search,

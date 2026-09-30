@@ -162,7 +162,7 @@ export function QuoteForm() {
                 ¡Cotización Enviada!
               </h3>
               <p className="text-muted-foreground mb-6">
-                Hemos recibido tu solicitud. Nuestro equipo te contactará en menos de 1 hora
+                Hemos recibido tu solicitud. Nuestro equipo te contactará en minutos
                 para coordinar la inspección.
               </p>
               <Button onClick={() => setIsSubmitted(false)}>
@@ -189,7 +189,7 @@ export function QuoteForm() {
             </h2>
             <p className="text-lg text-muted-foreground mb-8 text-pretty">
               Completa el formulario y te enviaremos una cotización detallada
-              a tu correo electrónico en menos de 1 hora.
+              a tu correo electrónico en minutos.
             </p>
 
             <form onSubmit={handleSubmit}>
@@ -353,7 +353,7 @@ export function QuoteForm() {
                   <div>
                     <h4 className="font-semibold text-card-foreground">Correo Electrónico</h4>
                     <p className="text-muted-foreground">contacto@reparotufuga.cl</p>
-                    <p className="text-sm text-primary mt-1">Respuesta en 1 hora</p>
+                    <p className="text-sm text-primary mt-1">Respuesta en minutos</p>
                   </div>
                 </a>
 
