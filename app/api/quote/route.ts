@@ -59,19 +59,25 @@ export async function POST(request: Request) {
     const urgencyName =
       urgencyLabels[urgency] ?? urgency
 
-    // Guardar primero: nunca confirmamos una solicitud que no llegó al panel.
+    // Intentar guardar primero. Si Supabase está temporalmente pausado,
+    // el correo al dueño sigue funcionando como respaldo para no perder clientes.
     const database = createAdminClient()
-    if (!database) throw new Error('Base de datos no configurada')
-
-    const { error: databaseError } = await database.from('leads').insert({
-      order_number: orderNumber, name, email, phone, address, service_type: serviceType, urgency, description,
-      source: attribution?.source || null, medium: attribution?.medium || null, campaign: attribution?.campaign || null,
-      term: attribution?.term || null, content: attribution?.content || null, gclid: attribution?.gclid || null,
-      landing_page: attribution?.landingPage || null, referrer: attribution?.referrer || null,
-    })
-    if (databaseError) {
-      console.error('[Quote] No fue posible guardar el lead:', databaseError.code)
-      throw new Error('No fue posible registrar la solicitud')
+    let leadStored = false
+    if (database) {
+      try {
+        const { error: databaseError } = await database.from('leads').insert({
+          order_number: orderNumber, name, email, phone, address, service_type: serviceType, urgency, description,
+          source: attribution?.source || null, medium: attribution?.medium || null, campaign: attribution?.campaign || null,
+          term: attribution?.term || null, content: attribution?.content || null, gclid: attribution?.gclid || null,
+          landing_page: attribution?.landingPage || null, referrer: attribution?.referrer || null,
+        }).abortSignal(AbortSignal.timeout(4000))
+        if (databaseError) console.error('[Quote] Respaldo por correo; Supabase falló:', databaseError.code)
+        leadStored = !databaseError
+      } catch {
+        console.error('[Quote] Respaldo por correo; Supabase no respondió')
+      }
+    } else {
+      console.error('[Quote] Respaldo por correo; Supabase no está configurado')
     }
 
       
@@ -185,6 +191,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       orderNumber,
+      stored: leadStored,
       message:
         'Cotización enviada correctamente',
     })
