@@ -117,6 +117,22 @@ export async function POST(
       receivedEmail.text ||
       'El correo recibido no contiene versión de texto.'
 
+    // Evita reenviar campañas de phishing evidentes al Gmail del negocio.
+    // El mensaje permanece en el registro de Resend para auditoría.
+    const phishingText = `${originalFrom}\n${originalSubject}\n${originalText}`.toLowerCase()
+    const blockedSender = phishingText.includes('@hdimeventra.com')
+    const phishingLanguage = [
+      'su buzón se cerrará',
+      'confirmar estado activo ahora',
+      'será desconectado',
+      'liberar espacio y mantener sus datos seguros',
+    ].some((phrase) => phishingText.includes(phrase))
+
+    if (blockedSender || phishingLanguage) {
+      console.warn('[INBOUND] Correo de phishing filtrado:', originalSubject)
+      return NextResponse.json({ received: true, forwarded: false, filtered: true })
+    }
+
     // Reenviar al Gmail del dueño
     const {
       error: forwardError,

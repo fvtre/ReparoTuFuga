@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { z } from 'zod'
+import { checkBotId } from 'botid/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 const quoteSchema = z.object({
@@ -17,6 +18,9 @@ const quoteSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const { isBot } = await checkBotId()
+    if (isBot) return NextResponse.json({ error: 'Solicitud no permitida' }, { status: 403 })
+
     const parsed = quoteSchema.safeParse(await request.json())
     if (!parsed.success) return NextResponse.json({ error: 'Revisa los datos ingresados' }, { status: 400 })
     const {
@@ -58,6 +62,21 @@ export async function POST(request: Request) {
 
     const urgencyName =
       urgencyLabels[urgency] ?? urgency
+
+    // Guardar primero: nunca confirmamos una solicitud que no llegó al panel.
+    const database = createAdminClient()
+    if (!database) throw new Error('Base de datos no configurada')
+
+    const { error: databaseError } = await database.from('leads').insert({
+      order_number: orderNumber, name, email, phone, address, service_type: serviceType, urgency, description,
+      source: attribution?.source || null, medium: attribution?.medium || null, campaign: attribution?.campaign || null,
+      term: attribution?.term || null, content: attribution?.content || null, gclid: attribution?.gclid || null,
+      landing_page: attribution?.landingPage || null, referrer: attribution?.referrer || null,
+    })
+    if (databaseError) {
+      console.error('[Quote] No fue posible guardar el lead:', databaseError.code)
+      throw new Error('No fue posible registrar la solicitud')
+    }
 
       
     // =====================================
@@ -131,19 +150,6 @@ export async function POST(request: Request) {
       throw new Error(
         'No fue posible enviar la cotización.',
       )
-    }
-
-    const database = createAdminClient()
-    if (database) {
-      const { error: databaseError } = await database.from('leads').insert({
-        order_number: orderNumber, name, email, phone, address, service_type: serviceType, urgency, description,
-        source: attribution?.source || null, medium: attribution?.medium || null, campaign: attribution?.campaign || null,
-        term: attribution?.term || null, content: attribution?.content || null, gclid: attribution?.gclid || null,
-        landing_page: attribution?.landingPage || null, referrer: attribution?.referrer || null,
-      })
-      if (databaseError) console.error('[Quote] No fue posible guardar el lead:', databaseError.code)
-    } else {
-      console.warn('[Quote] Supabase no configurado; la solicitud solo se entregó por correo.')
     }
 
     // =====================================
