@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { z } from 'zod'
-import { checkBotId } from 'botid/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 const quoteSchema = z.object({
@@ -18,9 +17,6 @@ const quoteSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const { isBot } = await checkBotId()
-    if (isBot) return NextResponse.json({ error: 'Solicitud no permitida' }, { status: 403 })
-
     const parsed = quoteSchema.safeParse(await request.json())
     if (!parsed.success) return NextResponse.json({ error: 'Revisa los datos ingresados' }, { status: 400 })
     const {
